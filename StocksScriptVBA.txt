@@ -1,0 +1,361 @@
+Sub StocksScript()
+
+Worksheets("A").Activate
+'Create variables
+Dim TickerSymbol As String
+Dim RowCounter As Long
+Dim TickerOpenStart As Double
+Dim TickerCloseEnd As Double
+Dim TickerYearlyChange As Double
+Dim TickerPercentChange As Double
+Dim TickerVolume As Double
+Dim TableRow As Integer
+
+Dim Sheet2018_Rows As Long
+Dim Sheet2019_Rows As Long
+Dim Sheet2020_Rows As Long
+
+'Initialize variables
+TickerVolume = 0
+RowCounter = 1
+TickerOpenStart = 0
+TableRow = 2
+
+Sheet2018_Rows = 753001
+Sheet2019_Rows = 756001
+Sheet2020_Rows = 759001
+
+'Summary Table Headers
+Cells(1, 9).Value = "Ticker"
+Cells(1, 10).Value = "Yearly Change"
+Cells(1, 11).Value = "Percent Change"
+Cells(1, 12).Value = "Total Stock Volume"
+
+'Begin main loop
+For i = 2 To Sheet2018_Rows
+    
+If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+'Assign values to variables
+    TickerSymbol = Cells(i, 1).Value
+    TickerVolume = TickerVolume + Cells(i, 7)
+    TickerCloseEnd = Cells(i, 6).Value
+    TickerYearlyChange = TickerCloseEnd - TickerOpenStart
+    TickerPercentChange = (TickerCloseEnd / TickerOpenStart) - 1
+'Write on Summary Table
+    Cells(TableRow, 9).Value = TickerSymbol
+    Cells(TableRow, 10).Value = TickerYearlyChange
+'Cell conditional color formatting
+    If TickerYearlyChange >= 0 Then
+        Cells(TableRow, 10).Interior.ColorIndex = 4
+    Else
+        Cells(TableRow, 10).Interior.ColorIndex = 3
+    End If
+    Cells(TableRow, 11).Value = TickerPercentChange
+'Cell percentage format
+    Cells(TableRow, 11).NumberFormat = "0.00%"
+    Cells(TableRow, 12).Value = TickerVolume
+    TableRow = TableRow + 1
+'Reset variables
+    TickerVolume = 0
+    RowCounter = 1
+
+'Values that are aggregated and openstart value assigned
+Else
+    TickerVolume = TickerVolume + Cells(i, 7).Value
+    If RowCounter = 1 Then
+        TickerOpenStart = Cells(i, 3).Value
+    End If
+    RowCounter = RowCounter + 1
+    
+End If
+
+Next i
+
+'_____________________ 2nd summary table
+
+'Create variables
+Dim MaxIncreaseVal As Double
+Dim MaxIncreaseStr As String
+
+Dim MaxDecreaseVal As Double
+Dim MaxDecreaseStr As String
+
+Dim MaxTotalVolumeVal As Double
+Dim MaxTotalVolumeStr As String
+
+Dim SummaryTable2_2018Rows As Integer
+Dim SummaryTable2_2019Rows As Integer
+Dim SummaryTable2_2020Rows As Integer
+
+'Create headers
+Cells(1, 16).Value = "Ticker"
+Cells(1, 17).Value = "Value"
+Cells(2, 15).Value = "Greatest % increase"
+Cells(3, 15).Value = "Greatest % decrease"
+Cells(4, 15).Value = "Greatest total volume"
+
+'Initialize variables
+SummaryTable2_2018Rows = 3001
+SummaryTable2_2019Rows = 2989
+SummaryTable2_2020Rows = 1
+
+'Loop to look for max increases / decreases / volumes
+For i = 2 To SummaryTable2_2018Rows
+If Cells(i, 11).Value > MaxIncreaseVal Then
+    MaxIncreaseVal = Cells(i, 11).Value
+    MaxIncreaseStr = Cells(i, 9).Value
+ElseIf Cells(i, 11).Value < MaxDecreaseVal Then
+    MaxDecreaseVal = Cells(i, 11).Value
+    MaxDecreaseStr = Cells(i, 9).Value
+ElseIf Cells(i, 12).Value > MaxTotalVolumeVal Then
+    MaxTotalVolumeVal = Cells(i, 12).Value
+    MaxTotalVolumeStr = Cells(i, 9).Value
+End If
+
+Next i
+
+'Write info on summary table 2
+Cells(2, 17).Value = MaxIncreaseVal
+Cells(2, 17).NumberFormat = "0.00%"
+Cells(2, 16).Value = MaxIncreaseStr
+Cells(3, 17).Value = MaxDecreaseVal
+Cells(3, 17).NumberFormat = "0.00%"
+Cells(3, 16).Value = MaxDecreaseStr
+Cells(4, 17).Value = MaxTotalVolumeVal
+Cells(4, 16).Value = MaxTotalVolumeStr
+
+
+MaxIncreaseVal = 0
+MaxIncreaseStr = ""
+MaxDecreaseVal = 0
+MaxDecreaseStr = ""
+MaxTotalVolumeVal = 0
+MaxTotalVolumeStr = ""
+
+MsgBox ("Finished A worksheet")
+'________
+
+Worksheets("B").Activate
+
+'Initialize variables
+TickerVolume = 0
+RowCounter = 1
+TickerOpenStart = 0
+TableRow = 2
+
+Sheet2018_Rows = 753001
+Sheet2019_Rows = 756001
+Sheet2020_Rows = 759001
+
+'Summary Table Headers
+Cells(1, 9).Value = "Ticker"
+Cells(1, 10).Value = "Yearly Change"
+Cells(1, 11).Value = "Percent Change"
+Cells(1, 12).Value = "Total Stock Volume"
+
+'Begin main loop
+For i = 2 To Sheet2019_Rows
+    
+If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+'Assign values to variables
+    TickerSymbol = Cells(i, 1).Value
+    TickerVolume = TickerVolume + Cells(i, 7)
+    TickerCloseEnd = Cells(i, 6).Value
+    TickerYearlyChange = TickerCloseEnd - TickerOpenStart
+    TickerPercentChange = (TickerCloseEnd / TickerOpenStart) - 1
+'Write on Summary Table
+    Cells(TableRow, 9).Value = TickerSymbol
+    Cells(TableRow, 10).Value = TickerYearlyChange
+'Cell conditional color formatting
+    If TickerYearlyChange >= 0 Then
+        Cells(TableRow, 10).Interior.ColorIndex = 4
+    Else
+        Cells(TableRow, 10).Interior.ColorIndex = 3
+    End If
+    Cells(TableRow, 11).Value = TickerPercentChange
+'Cell percentage format
+    Cells(TableRow, 11).NumberFormat = "0.00%"
+    Cells(TableRow, 12).Value = TickerVolume
+    TableRow = TableRow + 1
+'Reset variables
+    TickerVolume = 0
+    RowCounter = 1
+
+'Values that are aggregated and openstart value assigned
+Else
+    TickerVolume = TickerVolume + Cells(i, 7).Value
+    If RowCounter = 1 Then
+        TickerOpenStart = Cells(i, 3).Value
+    End If
+    RowCounter = RowCounter + 1
+    
+End If
+
+Next i
+
+'_____________________ 2nd summary table
+
+
+
+
+'Create headers
+Cells(1, 16).Value = "Ticker"
+Cells(1, 17).Value = "Value"
+Cells(2, 15).Value = "Greatest % increase"
+Cells(3, 15).Value = "Greatest % decrease"
+Cells(4, 15).Value = "Greatest total volume"
+
+'Initialize variables
+SummaryTable2_2018Rows = 3001
+SummaryTable2_2019Rows = 3001
+SummaryTable2_2020Rows = 3001
+
+'Loop to look for max increases / decreases / volumes
+For i = 2 To SummaryTable2_2019Rows
+If Cells(i, 11).Value > MaxIncreaseVal Then
+    MaxIncreaseVal = Cells(i, 11).Value
+    MaxIncreaseStr = Cells(i, 9).Value
+ElseIf Cells(i, 11).Value < MaxDecreaseVal Then
+    MaxDecreaseVal = Cells(i, 11).Value
+    MaxDecreaseStr = Cells(i, 9).Value
+ElseIf Cells(i, 12).Value > MaxTotalVolumeVal Then
+    MaxTotalVolumeVal = Cells(i, 12).Value
+    MaxTotalVolumeStr = Cells(i, 9).Value
+End If
+
+Next i
+
+'Write info on summary table 2
+Cells(2, 17).Value = MaxIncreaseVal
+Cells(2, 17).NumberFormat = "0.00%"
+Cells(2, 16).Value = MaxIncreaseStr
+Cells(3, 17).Value = MaxDecreaseVal
+Cells(3, 17).NumberFormat = "0.00%"
+Cells(3, 16).Value = MaxDecreaseStr
+Cells(4, 17).Value = MaxTotalVolumeVal
+Cells(4, 16).Value = MaxTotalVolumeStr
+
+MaxIncreaseVal = 0
+MaxIncreaseStr = ""
+MaxDecreaseVal = 0
+MaxDecreaseStr = ""
+MaxTotalVolumeVal = 0
+MaxTotalVolumeStr = ""
+
+MsgBox ("Finished B worksheet")
+'________
+
+Worksheets("C").Activate
+
+'Initialize variables
+TickerVolume = 0
+RowCounter = 1
+TickerOpenStart = 0
+TableRow = 2
+
+Sheet2018_Rows = 753001
+Sheet2019_Rows = 756001
+Sheet2020_Rows = 759001
+
+'Summary Table Headers
+Cells(1, 9).Value = "Ticker"
+Cells(1, 10).Value = "Yearly Change"
+Cells(1, 11).Value = "Percent Change"
+Cells(1, 12).Value = "Total Stock Volume"
+
+'Begin main loop
+For i = 2 To Sheet2020_Rows
+    
+If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+'Assign values to variables
+    TickerSymbol = Cells(i, 1).Value
+    TickerVolume = TickerVolume + Cells(i, 7)
+    TickerCloseEnd = Cells(i, 6).Value
+    TickerYearlyChange = TickerCloseEnd - TickerOpenStart
+    TickerPercentChange = (TickerCloseEnd / TickerOpenStart) - 1
+'Write on Summary Table
+    Cells(TableRow, 9).Value = TickerSymbol
+    Cells(TableRow, 10).Value = TickerYearlyChange
+'Cell conditional color formatting
+    If TickerYearlyChange >= 0 Then
+        Cells(TableRow, 10).Interior.ColorIndex = 4
+    Else
+        Cells(TableRow, 10).Interior.ColorIndex = 3
+    End If
+    Cells(TableRow, 11).Value = TickerPercentChange
+'Cell percentage format
+    Cells(TableRow, 11).NumberFormat = "0.00%"
+    Cells(TableRow, 12).Value = TickerVolume
+    TableRow = TableRow + 1
+'Reset variables
+    TickerVolume = 0
+    RowCounter = 1
+
+'Values that are aggregated and openstart value assigned
+Else
+    TickerVolume = TickerVolume + Cells(i, 7).Value
+    If RowCounter = 1 Then
+        TickerOpenStart = Cells(i, 3).Value
+    End If
+    RowCounter = RowCounter + 1
+    
+End If
+
+Next i
+
+'_____________________ 2nd summary table
+
+
+
+
+'Create headers
+Cells(1, 16).Value = "Ticker"
+Cells(1, 17).Value = "Value"
+Cells(2, 15).Value = "Greatest % increase"
+Cells(3, 15).Value = "Greatest % decrease"
+Cells(4, 15).Value = "Greatest total volume"
+
+'Initialize variables
+SummaryTable2_2018Rows = 3001
+SummaryTable2_2019Rows = 3001
+SummaryTable2_2020Rows = 3001
+
+'Loop to look for max increases / decreases / volumes
+For i = 2 To SummaryTable2_2020Rows
+If Cells(i, 11).Value > MaxIncreaseVal Then
+    MaxIncreaseVal = Cells(i, 11).Value
+    MaxIncreaseStr = Cells(i, 9).Value
+ElseIf Cells(i, 11).Value < MaxDecreaseVal Then
+    MaxDecreaseVal = Cells(i, 11).Value
+    MaxDecreaseStr = Cells(i, 9).Value
+ElseIf Cells(i, 12).Value > MaxTotalVolumeVal Then
+    MaxTotalVolumeVal = Cells(i, 12).Value
+    MaxTotalVolumeStr = Cells(i, 9).Value
+End If
+
+Next i
+
+'Write info on summary table 2
+Cells(2, 17).Value = MaxIncreaseVal
+Cells(2, 17).NumberFormat = "0.00%"
+Cells(2, 16).Value = MaxIncreaseStr
+Cells(3, 17).Value = MaxDecreaseVal
+Cells(3, 17).NumberFormat = "0.00%"
+Cells(3, 16).Value = MaxDecreaseStr
+Cells(4, 17).Value = MaxTotalVolumeVal
+Cells(4, 16).Value = MaxTotalVolumeStr
+
+MaxIncreaseVal = 0
+MaxIncreaseStr = ""
+MaxDecreaseVal = 0
+MaxDecreaseStr = ""
+MaxTotalVolumeVal = 0
+MaxTotalVolumeStr = ""
+
+MsgBox ("Finished C worksheet")
+'________
+
+
+End Sub
+
+
